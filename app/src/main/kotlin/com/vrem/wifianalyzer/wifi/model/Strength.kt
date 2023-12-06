@@ -31,7 +31,7 @@ enum class Strength(@DrawableRes val imageResource: Int, @ColorRes val colorReso
     fun weak(): Boolean = ZERO == this
 
     companion object {
-        const val colorResourceDefault: Int = R.color.regular
+        val colorResourceDefault: Int = R.color.regular
 
         fun calculate(level: Int): Strength {
             val enumValues: Array<Strength> = enumValues()
