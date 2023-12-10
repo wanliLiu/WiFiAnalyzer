@@ -26,18 +26,21 @@ apply plugin: "kotlin-allopen"
 dependencies {
     // Compile Build Dependencies
     implementation fileTree(include: ["*.jar"], dir: "libs")
-    implementation 'com.google.android.material:material:1.9.0'
-    implementation 'androidx.annotation:annotation:1.6.0'
+    implementation 'com.google.android.material:material:1.10.0'
+    implementation 'androidx.annotation:annotation:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'androidx.collection:collection-ktx:1.2.0'
-    implementation 'androidx.core:core-ktx:1.10.1'
+    implementation 'androidx.collection:collection-ktx:1.3.0'
+    implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.core:core-splashscreen:1.0.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
-    implementation 'androidx.media:media:1.6.0'
-    implementation 'androidx.preference:preference-ktx:1.2.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2'
+    implementation 'androidx.media:media:1.7.0'
+    implementation 'androidx.preference:preference-ktx:1.2.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
     implementation 'com.jjoe64:graphview:4.2.2'
+    implementation 'org.jsoup:jsoup:1.17.1'
+    implementation 'com.google.code.gson:gson:2.10.1'
     // Unit Test Dependencies
     testImplementation 'androidx.test.ext:junit:1.1.5'
     testImplementation 'com.googlecode.junit-toolbox:junit-toolbox:2.4'
@@ -55,8 +58,7 @@ dependencies {
 
 android {
     namespace 'com.vrem.wifianalyzer'
-    compileSdkVersion 33
-    buildToolsVersion '33.0.2'
+    compileSdk 34
 
     sourceSets.each {
         it.java.srcDirs += "src/$it.name/kotlin"
@@ -65,7 +67,7 @@ android {
     defaultConfig {
         applicationId "com.vrem.wifianalyzer"
         minSdkVersion 23
-        targetSdkVersion 33
+        targetSdkVersion 34
         versionCode
         versionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -107,12 +109,12 @@ android {
 
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     lint {
         disable 'GoogleAppIndexingWarning'

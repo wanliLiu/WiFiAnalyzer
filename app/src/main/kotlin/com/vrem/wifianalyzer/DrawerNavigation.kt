@@ -37,6 +37,7 @@ class DrawerNavigation(private val mainActivity: MainActivity, private val toolb
         actionBarDrawerToggle = createDrawerToggle(drawer)
         drawer.addDrawerListener(actionBarDrawerToggle)
         syncState()
+        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
     }
 
     fun createDrawerToggle(drawer: DrawerLayout): ActionBarDrawerToggle =

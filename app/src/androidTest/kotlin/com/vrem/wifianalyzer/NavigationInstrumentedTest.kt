@@ -38,22 +38,22 @@ internal class NavigationInstrumentedTest : Runnable {
     }
 
     private fun selectMenuItem(menuItem: Int) {
-        pauseShort()
-        val appCompatImageButton = Espresso.onView(
-                Matchers.allOf(ViewMatchers.withContentDescription(NAVIGATION_DRAWER_TAG),
-                        ChildAtPosition(Matchers.allOf(ViewMatchers.withId(R.id.toolbar),
-                                ChildAtPosition(
-                                        ViewMatchers.withClassName(Matchers.`is`("com.google.android.material.appbar.AppBarLayout")),
-                                        NAVIGATION_DRAWER_BUTTON)),
-                                NAVIGATION_DRAWER_ACTION),
-                        ViewMatchers.isDisplayed()))
-        appCompatImageButton.perform(ViewActions.click())
-        pauseShort()
-        val navigationMenuItemView = Espresso.onView(
-                Matchers.allOf(ChildAtPosition(Matchers.allOf(ViewMatchers.withId(R.id.design_navigation_view),
-                        ChildAtPosition(ViewMatchers.withId(R.id.nav_drawer), NAVIGATION_DRAWER_BUTTON)), menuItem),
-                        ViewMatchers.isDisplayed()))
-        navigationMenuItemView.perform(ViewActions.click())
+//        pauseShort()
+//        val appCompatImageButton = Espresso.onView(
+//                Matchers.allOf(ViewMatchers.withContentDescription(NAVIGATION_DRAWER_TAG),
+//                        ChildAtPosition(Matchers.allOf(ViewMatchers.withId(R.id.toolbar),
+//                                ChildAtPosition(
+//                                        ViewMatchers.withClassName(Matchers.`is`("com.google.android.material.appbar.AppBarLayout")),
+//                                        NAVIGATION_DRAWER_BUTTON)),
+//                                NAVIGATION_DRAWER_ACTION),
+//                        ViewMatchers.isDisplayed()))
+//        appCompatImageButton.perform(ViewActions.click())
+//        pauseShort()
+//        val navigationMenuItemView = Espresso.onView(
+//                Matchers.allOf(ChildAtPosition(Matchers.allOf(ViewMatchers.withId(R.id.design_navigation_view),
+//                        ChildAtPosition(ViewMatchers.withId(R.id.nav_drawer), NAVIGATION_DRAWER_BUTTON)), menuItem),
+//                        ViewMatchers.isDisplayed()))
+//        navigationMenuItemView.perform(ViewActions.click())
     }
 
     companion object {

@@ -17,12 +17,16 @@
  */
 package com.vrem.wifianalyzer.wifi.model
 
+import android.net.DhcpInfo
 import com.vrem.util.EMPTY
 
 typealias SSID = String
 typealias BSSID = String
 
-data class WiFiIdentifier(val ssidRaw: SSID = String.EMPTY, val bssid: BSSID = String.EMPTY) : Comparable<WiFiIdentifier> {
+data class WiFiIdentifier(
+    val ssidRaw: SSID = String.EMPTY,
+    val bssid: BSSID = String.EMPTY,
+) : Comparable<WiFiIdentifier> {
 
     val ssid = when {
         ssidRaw.isEmpty() -> "*hidden*"
@@ -30,7 +34,7 @@ data class WiFiIdentifier(val ssidRaw: SSID = String.EMPTY, val bssid: BSSID = S
     }
 
     val title: String
-        get() = "$ssid ($bssid)"
+        get() ="$ssid ($bssid)"
 
     fun equals(other: WiFiIdentifier, ignoreCase: Boolean = false): Boolean =
         ssid.equals(other.ssidRaw, ignoreCase) && bssid.equals(other.bssid, ignoreCase)

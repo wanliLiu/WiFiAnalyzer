@@ -36,7 +36,7 @@ val navigationOptionOther = listOf(
         navigationOptionBottomNavOn)
 
 val navigationOptionRating = listOf(
-        navigationOptionWiFiSwitchOn,
+        navigationOptionWiFiSwitchOff,
         navigationOptionScannerSwitchOn,
         navigationOptionFilterOff,
         navigationOptionBottomNavOn)

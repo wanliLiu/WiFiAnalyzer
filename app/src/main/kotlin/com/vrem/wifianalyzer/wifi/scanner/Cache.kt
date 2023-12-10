@@ -17,6 +17,7 @@
  */
 package com.vrem.wifianalyzer.wifi.scanner
 
+import android.net.DhcpInfo
 import android.net.wifi.ScanResult
 import android.net.wifi.WifiInfo
 import com.vrem.annotation.OpenClass
@@ -32,6 +33,7 @@ internal class Cache {
     private val scanResults: ArrayDeque<List<ScanResult>> = ArrayDeque(MAXIMUM)
     private var count: Int = COUNT_MIN
     var wifiInfo: WifiInfo? = null
+    var dhcpInfo: DhcpInfo ?= null
 
     fun scanResults(): List<CacheResult> =
         combineCache()

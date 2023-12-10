@@ -28,6 +28,8 @@ enum class NavigationMenu(val icon: Int,
                           val navigationItem: NavigationItem,
                           val navigationOptions: List<NavigationOption> = navigationOptionOff) {
     ACCESS_POINTS(R.drawable.ic_network_wifi, R.string.action_access_points, navigationItemAccessPoints, navigationOptionAp),
+//    COLLECT_INFO(R.drawable.ic_network_wifi, R.string.action_collect_info, navigationCollectInfo),
+    COLLECT_INFO(R.drawable.ic_wifi_tethering, R.string.action_collect_info, navigationCollectInfo, navigationOptionRating),
     CHANNEL_RATING(R.drawable.ic_wifi_tethering, R.string.action_channel_rating, navigationItemChannelRating, navigationOptionRating),
     CHANNEL_GRAPH(R.drawable.ic_insert_chart, R.string.action_channel_graph, navigationItemChannelGraph, navigationOptionOther),
     TIME_GRAPH(R.drawable.ic_show_chart, R.string.action_time_graph, navigationItemTimeGraph, navigationOptionOther),

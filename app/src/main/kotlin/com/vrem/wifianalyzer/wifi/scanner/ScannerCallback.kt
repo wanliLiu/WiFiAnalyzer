@@ -26,6 +26,7 @@ internal class ScannerCallback(private val wiFiManagerWrapper: WiFiManagerWrappe
 
     override fun onSuccess() {
         cache.add(wiFiManagerWrapper.scanResults())
+        cache.dhcpInfo = wiFiManagerWrapper.getDhcpInfo()
         cache.wifiInfo = wiFiManagerWrapper.wiFiInfo()
     }
 

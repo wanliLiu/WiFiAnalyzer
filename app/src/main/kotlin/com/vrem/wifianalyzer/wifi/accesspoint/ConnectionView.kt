@@ -106,5 +106,4 @@ class ConnectionView(
             accessPointPopup.attach(view.findViewById(R.id.ssid), wiFiDetail)
         }
     }
-
 }

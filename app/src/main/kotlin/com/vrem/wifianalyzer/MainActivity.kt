@@ -127,7 +127,7 @@ class MainActivity : AppCompatActivity(), NavigationMenuControl, OnSharedPrefere
                     screenLayoutSize == Configuration.SCREENLAYOUT_SIZE_XLARGE
         }
 
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         val mainContext = MainContext.INSTANCE
         if (mainReload.shouldReload(mainContext.settings)) {
             MainContext.INSTANCE.scannerService.stop()
@@ -225,5 +225,4 @@ class MainActivity : AppCompatActivity(), NavigationMenuControl, OnSharedPrefere
     fun mainConnectionVisibility(visibility: Int) {
         findViewById<View>(R.id.main_connection).visibility = visibility
     }
-
 }

@@ -18,6 +18,7 @@
 package com.vrem.wifianalyzer.wifi.manager
 
 import android.annotation.SuppressLint
+import android.net.DhcpInfo
 import android.net.wifi.ScanResult
 import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
@@ -65,6 +66,15 @@ class WiFiManagerWrapper(
         } catch (e: Exception) {
             listOf()
         }
+
+    fun getDhcpInfo(): DhcpInfo? {
+        return try {
+            wifiManager.dhcpInfo
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
 
     @Suppress("DEPRECATION")
     fun wiFiInfo(): WifiInfo? =

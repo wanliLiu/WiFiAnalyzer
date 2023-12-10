@@ -23,7 +23,16 @@ import com.vrem.annotation.OpenClass
 import com.vrem.util.EMPTY
 import com.vrem.util.buildMinVersionR
 import com.vrem.util.ssid
-import com.vrem.wifianalyzer.wifi.model.*
+import com.vrem.wifianalyzer.wifi.model.WiFiConnection
+import com.vrem.wifianalyzer.wifi.model.WiFiData
+import com.vrem.wifianalyzer.wifi.model.WiFiDetail
+import com.vrem.wifianalyzer.wifi.model.WiFiIdentifier
+import com.vrem.wifianalyzer.wifi.model.WiFiSignal
+import com.vrem.wifianalyzer.wifi.model.WiFiStandard
+import com.vrem.wifianalyzer.wifi.model.WiFiStandardId
+import com.vrem.wifianalyzer.wifi.model.WiFiWidth
+import com.vrem.wifianalyzer.wifi.model.convertIpV4Address
+import com.vrem.wifianalyzer.wifi.model.convertSSID
 
 @Suppress("DEPRECATION")
 fun WifiInfo.ipV4Address(): Int = ipAddress
@@ -33,12 +42,20 @@ internal class Transformer(private val cache: Cache) {
 
     internal fun transformWifiInfo(): WiFiConnection {
         val wifiInfo: WifiInfo? = cache.wifiInfo
+        val dhcpInfo = cache.dhcpInfo
         return if (wifiInfo == null || wifiInfo.networkId == -1) {
             WiFiConnection.EMPTY
         } else {
             val ssid = convertSSID(wifiInfo.ssid ?: String.EMPTY)
-            val wiFiIdentifier = WiFiIdentifier(ssid, wifiInfo.bssid ?: String.EMPTY)
-            WiFiConnection(wiFiIdentifier, convertIpV4Address(wifiInfo.ipV4Address()), wifiInfo.linkSpeed)
+            val wiFiIdentifier =
+                WiFiIdentifier(ssid, wifiInfo.bssid ?: String.EMPTY)
+            val ipAddress = if (dhcpInfo != null) convertIpV4Address(dhcpInfo.ipAddress) else ""
+            val gateIpAddress = if (dhcpInfo != null) convertIpV4Address(dhcpInfo.gateway) else ""
+            WiFiConnection(
+                wiFiIdentifier,
+                "$ipAddress $gateIpAddress",
+                wifiInfo.linkSpeed
+            )
         }
     }
 
@@ -60,7 +77,8 @@ internal class Transformer(private val cache: Cache) {
     private fun transform(cacheResult: CacheResult): WiFiDetail {
         val scanResult = cacheResult.scanResult
         val wiFiWidth = WiFiWidth.findOne(scanResult.channelWidth)
-        val centerFrequency = wiFiWidth.calculateCenter(scanResult.frequency, scanResult.centerFreq0)
+        val centerFrequency =
+            wiFiWidth.calculateCenter(scanResult.frequency, scanResult.centerFreq0)
         val mc80211 = scanResult.is80211mcResponder
         val wiFiStandard = WiFiStandard.findOne(wiFiStandard(scanResult))
         val wiFiSignal = WiFiSignal(
