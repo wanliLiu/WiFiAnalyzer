@@ -8,11 +8,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
 import com.vrem.wifianalyzer.MainContext
+import com.vrem.wifianalyzer.R
 import com.vrem.wifianalyzer.databinding.FragmentCollectinfoBinding
 import com.vrem.wifianalyzer.http.cookie.https.HttpsUtils
 import com.vrem.wifianalyzer.wifi.model.convertIpV4Address
@@ -61,7 +64,30 @@ class CollectInfoFragment : Fragment() {
         binding = FragmentCollectinfoBinding.inflate(inflater, container, false)
         binding.loading.visibility = View.INVISIBLE
         binding.btnUpload.visibility = View.INVISIBLE
+        binding.btnUpload.setOnClickListener {
+            showInputDescDialog()
+        }
         return binding.root
+    }
+
+    private fun showInputDescDialog() {
+        val layout = MainContext.INSTANCE.layoutInflater.inflate(R.layout.location_input, null)
+        val input = layout.findViewById<EditText>(R.id.inputEditText)
+        AlertDialog.Builder(requireContext())
+            .setTitle("输入位置信息")
+            .setView(layout)
+            .setPositiveButton("确定") { _, _ ->
+                val inputLocation = input.text.toString()
+                if (!TextUtils.isEmpty(inputLocation)) {
+                    json.put("routerLocationDesc", inputLocation)
+                    postInfoToServer()
+                } else {
+                    Toast.makeText(requireContext(), "输入不能为空", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setNegativeButton("取消") { dialog, _ -> dialog.dismiss() }
+            .create()
+            .show()
     }
 
     override fun onResume() {
@@ -129,11 +155,11 @@ class CollectInfoFragment : Fragment() {
                 url = "http://${convertIpV4Address(dhcpInfo!!.gateway)}/"
                 getRouterWebInfo(url) { success ->
                     if (success) {
-                        postInfoToServer()
+                        showSuccess()
                     }
                 }
             } else {
-                postInfoToServer()
+                showSuccess()
             }
         }
     }
@@ -142,7 +168,7 @@ class CollectInfoFragment : Fragment() {
         runOnUiThread {
             showLoading(false)
             binding.btnUpload.visibility = View.VISIBLE
-            Toast.makeText(requireContext(), "操作成功", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "信息收集成功", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -181,6 +207,7 @@ class CollectInfoFragment : Fragment() {
      *
      */
     private fun postInfoToServer() {
+        binding.loading.visibility = View.VISIBLE
         val mediaType = "application/json; charset=utf-8".toMediaType()
         val requestBody = json.toString().toRequestBody(mediaType)
 
@@ -201,7 +228,11 @@ class CollectInfoFragment : Fragment() {
             override fun onResponse(call: Call, response: Response) {
                 val result = response.body?.string() ?: ""
                 Log.d("api", result)
-                showSuccess()
+                runOnUiThread {
+                    binding.loading.visibility = View.INVISIBLE
+                    Toast.makeText(requireContext(), "数据上传成功", Toast.LENGTH_LONG)
+                        .show()
+                }
             }
         })
     }
