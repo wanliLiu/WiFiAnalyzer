@@ -220,6 +220,7 @@ class CollectInfoFragment : Fragment() {
             override fun onFailure(call: Call, e: IOException) {
                 e.printStackTrace()
                 runOnUiThread {
+                    binding.loading.visibility = View.INVISIBLE
                     Toast.makeText(requireContext(), "数据上传失败", Toast.LENGTH_LONG)
                         .show()
                 }
