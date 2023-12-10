@@ -4,6 +4,7 @@ import android.net.DhcpInfo
 import android.net.wifi.WifiInfo
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,8 +18,10 @@ import com.vrem.wifianalyzer.http.cookie.https.HttpsUtils
 import com.vrem.wifianalyzer.wifi.model.convertIpV4Address
 import okhttp3.Call
 import okhttp3.Callback
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import okio.IOException
 import org.json.JSONObject
@@ -126,11 +129,11 @@ class CollectInfoFragment : Fragment() {
                 url = "http://${convertIpV4Address(dhcpInfo!!.gateway)}/"
                 getRouterWebInfo(url) { success ->
                     if (success) {
-                        showSuccess()
+                        postInfoToServer()
                     }
                 }
             } else {
-                showSuccess()
+                postInfoToServer()
             }
         }
     }
@@ -139,7 +142,7 @@ class CollectInfoFragment : Fragment() {
         runOnUiThread {
             showLoading(false)
             binding.btnUpload.visibility = View.VISIBLE
-            Toast.makeText(requireContext(), "获取信息成功", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "操作成功", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -170,6 +173,35 @@ class CollectInfoFragment : Fragment() {
                 json.put("routerWebContent", doc.html())
                 displayContent()
                 isSuccess(true)
+            }
+        })
+    }
+
+    /**
+     *
+     */
+    private fun postInfoToServer() {
+        val mediaType = "application/json; charset=utf-8".toMediaType()
+        val requestBody = json.toString().toRequestBody(mediaType)
+
+        val request: Request = Request.Builder()
+            .url("http://192.168.101.9:8080/infoCollect")
+            .post(requestBody)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                runOnUiThread {
+                    Toast.makeText(requireContext(), "数据上传失败", Toast.LENGTH_LONG)
+                        .show()
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val result = response.body?.string() ?: ""
+                Log.d("api", result)
+                showSuccess()
             }
         })
     }
