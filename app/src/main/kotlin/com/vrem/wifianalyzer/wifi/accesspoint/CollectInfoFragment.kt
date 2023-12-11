@@ -96,13 +96,22 @@ class CollectInfoFragment : Fragment() {
             Toast.makeText(requireContext(), "没有连接到wifi", Toast.LENGTH_SHORT).show()
         } else {
             json = JSONObject()
+            val ipAddress = convertIpV4Address(dhcpInfo!!.ipAddress)
+            val gateWayAddress = convertIpV4Address(dhcpInfo!!.gateway)
             json.put("ssid", wifiInfo!!.ssid)
             json.put("bssid", wifiInfo!!.bssid)
-            json.put("lanIp", convertIpV4Address(dhcpInfo!!.ipAddress))
-            json.put("gateWayIp", convertIpV4Address(dhcpInfo!!.gateway))
-            showLoading()
+            json.put("lanIp", ipAddress)
+            json.put("gateWayIp", gateWayAddress)
             displayContent()
-            getWanIpInfo()
+            if (!TextUtils.isEmpty(ipAddress) && !TextUtils.isEmpty(gateWayAddress)) {
+                val vendorName = MainContext.INSTANCE.vendorService.findVendorName(wifiInfo!!.bssid)
+                json.put("routerVendor", vendorName)
+                showLoading()
+                getWanIpInfo()
+            } else {
+                Toast.makeText(requireContext(), "ip地址或者网关地址为空", Toast.LENGTH_SHORT)
+                    .show()
+            }
         }
     }
 
@@ -212,7 +221,7 @@ class CollectInfoFragment : Fragment() {
         val requestBody = json.toString().toRequestBody(mediaType)
 
         val request: Request = Request.Builder()
-            .url("http://192.168.101.9:8080/infoCollect")
+            .url("http://8.213.130.38:28311/report/post_report")
             .post(requestBody)
             .build()
 
@@ -228,10 +237,11 @@ class CollectInfoFragment : Fragment() {
 
             override fun onResponse(call: Call, response: Response) {
                 val result = response.body?.string() ?: ""
+                val code = JSONObject(result).optInt("code", 0)
                 Log.d("api", result)
                 runOnUiThread {
                     binding.loading.visibility = View.INVISIBLE
-                    Toast.makeText(requireContext(), "数据上传成功", Toast.LENGTH_LONG)
+                    Toast.makeText(requireContext(), if (code == 200)"数据上传成功" else "数据上传失败！！！！", Toast.LENGTH_LONG)
                         .show()
                 }
             }
