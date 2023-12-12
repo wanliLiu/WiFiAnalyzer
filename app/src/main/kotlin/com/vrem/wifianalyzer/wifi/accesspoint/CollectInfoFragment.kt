@@ -195,6 +195,7 @@ class CollectInfoFragment : Fragment() {
                 e.printStackTrace()
                 isSuccess(false)
                 runOnUiThread {
+                    binding.btnUpload.visibility = View.VISIBLE
                     showLoading(false)
                     Toast.makeText(requireContext(), "路由器的信息获取失败：$url", Toast.LENGTH_LONG)
                         .show()
